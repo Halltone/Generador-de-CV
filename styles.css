@@ -13,10 +13,29 @@ body {
     padding: 20px;
 }
 
+/* Selector de idioma */
+.language-selector {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.language-selector select {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    color: #333;
+    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 30px 20px;
 }
 
 header {
@@ -61,6 +80,8 @@ h1 {
     margin-bottom: 15px;
     border-bottom: 2px solid #e9ecef;
     padding-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* Nueva regla: Asegura que los botones 'Agregar' y 'Eliminar Sección' estén uno al lado del otro */
@@ -317,4 +338,118 @@ textarea {
 /* Estilos para el CV dentro del PDF, aunque muchos están en línea en JS, es bueno tener un contenedor base */
 .cv-document {
     /* Estilos del CV que ya están en el JS, puedes copiarlos aquí si prefieres CSS */
+}
+
+/* --- MEDIA QUERIES PARA DISPOSITIVOS MÓVILES --- */
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px 10px;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .actions .btn {
+        min-width: 200px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .cubicle {
+        padding: 15px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .section-header > div {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .language-selector {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .language-selector select {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .dynamic-item {
+        padding: 10px;
+        padding-top: 30px;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    
+    .cv-render-box {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    .section-title {
+        font-size: 1.3em;
+    }
+    
+    .actions .btn {
+        min-width: 100%;
+    }
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .field-item {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .btn-remove-field {
+        align-self: flex-end;
+    }
 }

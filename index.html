@@ -7,86 +7,95 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Selector de idioma -->
+    <div class="language-selector">
+        <select id="languageSelect" onchange="cambiarIdioma()">
+            <option value="es">Español</option>
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
     <div class="container">
         <header>
-            <h1>Generador de CV</h1>
+            <h1 data-i18n="title">Generador de CV</h1>
             <div class="actions">
-                <button class="btn btn-primary" onclick="exportarJSON()">Exportar JSON</button>
+                <button class="btn btn-primary" onclick="exportarJSON()" data-i18n="exportJson">Exportar JSON</button>
                 <label class="btn btn-secondary">
-                    Importar JSON
+                    <span data-i18n="importJson">Importar JSON</span>
                     <input type="file" id="import-json" accept=".json" onchange="importarJSON(event)" style="display: none;">
                 </label>
-                <button class="btn btn-primary" onclick="abrirPreviewCV()">Previsualizar y Generar PDF</button>
-                <button class="btn btn-danger" onclick="limpiarFormulario()">Limpiar Todo</button>
+                <button class="btn btn-primary" onclick="abrirPreviewCV()" data-i18n="previewPdf">Previsualizar y Generar PDF</button>
+                <button class="btn btn-danger" onclick="limpiarFormulario()" data-i18n="clearAll">Limpiar Todo</button>
             </div>
         </header>
 
         <div class="cubicle">
-            <h2 class="section-title">Información Personal</h2>
+            <h2 class="section-title" data-i18n="personalInfo">Información Personal</h2>
             <div class="form-group">
-                <label>Nombre Completo</label>
-                <input type="text" id="nombre" placeholder="Tu nombre completo">
+                <label data-i18n="fullName">Nombre Completo</label>
+                <input type="text" id="nombre" data-i18n-placeholder="fullNamePlaceholder">
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="tel" id="telefono" placeholder="Ej: +54 9 11 5555-5555">
+                    <label data-i18n="phone">Teléfono</label>
+                    <input type="tel" id="telefono" data-i18n-placeholder="phonePlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" placeholder="ejemplo@email.com">
+                    <label data-i18n="email">Email</label>
+                    <input type="email" id="email" data-i18n-placeholder="emailPlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>LinkedIn (URL)</label>
-                    <input type="text" id="linkedin" placeholder="URL de tu perfil de LinkedIn">
+                    <label data-i18n="linkedin">LinkedIn (URL)</label>
+                    <input type="text" id="linkedin" data-i18n-placeholder="linkedinPlaceholder">
                 </div>
             </div>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Objetivo Profesional (Resumen)</h2>
+            <h2 class="section-title" data-i18n="professionalObjective">Objetivo Profesional (Resumen)</h2>
             <div class="form-group">
-                <label>Extracto</label>
-                <textarea id="objetivo" rows="4" placeholder="Breve resumen de tu carrera y metas profesionales..."></textarea>
+                <label data-i18n="summary">Extracto</label>
+                <textarea id="objetivo" rows="4" data-i18n-placeholder="objectivePlaceholder"></textarea>
             </div>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Experiencia Laboral</h2>
+            <h2 class="section-title" data-i18n="workExperience">Experiencia Laboral</h2>
             <div id="experiencias-container">
                 </div>
-            <button class="btn btn-add" onclick="agregarExperiencia()">+ Agregar Experiencia</button>
+            <button class="btn btn-add" onclick="agregarExperiencia()" data-i18n="addExperience">+ Agregar Experiencia</button>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Formación Académica</h2>
+            <h2 class="section-title" data-i18n="education">Formación Académica</h2>
             <div id="formacion-container">
                 </div>
-            <button class="btn btn-add" onclick="agregarFormacion()">+ Agregar Formación</button>
+            <button class="btn btn-add" onclick="agregarFormacion()" data-i18n="addEducation">+ Agregar Formación</button>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Cursos y Certificaciones</h2>
+            <h2 class="section-title" data-i18n="coursesCertifications">Cursos y Certificaciones</h2>
             <div id="cursos-container">
                 </div>
-            <button class="btn btn-add" onclick="agregarCurso()">+ Agregar Curso</button>
+            <button class="btn btn-add" onclick="agregarCurso()" data-i18n="addCourse">+ Agregar Curso</button>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Idiomas</h2>
+            <h2 class="section-title" data-i18n="languages">Idiomas</h2>
             <div id="idiomas-container">
                 </div>
-            <button class="btn btn-add" onclick="agregarIdioma()">+ Agregar Idioma</button>
+            <button class="btn btn-add" onclick="agregarIdioma()" data-i18n="addLanguage">+ Agregar Idioma</button>
         </div>
 
         <div class="cubicle">
-            <h2 class="section-title">Habilidades</h2>
+            <h2 class="section-title" data-i18n="skills">Habilidades</h2>
             <div id="habilidades-container">
                 </div>
-            <button class="btn btn-add" onclick="agregarHabilidad()">+ Agregar Habilidad</button>
+            <button class="btn btn-add" onclick="agregarHabilidad()" data-i18n="addSkill">+ Agregar Habilidad</button>
         </div>
 
-        <button class="btn btn-add-section" onclick="abrirModalNuevaSeccion()">
+        <button class="btn btn-add-section" onclick="abrirModalNuevaSeccion()" data-i18n="addNewSection">
             + Agregar Nueva Sección
         </button>
     </div>
@@ -94,24 +103,24 @@
     <div id="modalNuevaSeccion" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Crear Nueva Sección</h3>
+                <h3 class="modal-title" data-i18n="createNewSection">Crear Nueva Sección</h3>
                 <button class="close-modal" onclick="cerrarModalNuevaSeccion()">×</button>
             </div>
             <div class="form-group">
-                <label>Nombre de la Sección</label>
-                <input type="text" id="nombreSeccion" placeholder="Ej: Proyectos, Voluntariado, etc.">
+                <label data-i18n="sectionName">Nombre de la Sección</label>
+                <input type="text" id="nombreSeccion" data-i18n-placeholder="sectionNamePlaceholder">
             </div>
             <div class="form-group">
-                <label>Campos de la Sección</label>
+                <label data-i18n="sectionFields">Campos de la Sección</label>
                 <div id="campos-container">
                     </div>
-                <button type="button" class="btn btn-add" onclick="agregarCampo()" style="margin-top: 10px;">
+                <button type="button" class="btn btn-add" onclick="agregarCampo()" style="margin-top: 10px;" data-i18n="addField">
                     + Agregar Campo
                 </button>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="crearNuevaSeccion()">Crear Sección</button>
-                <button class="btn btn-secondary" onclick="cerrarModalNuevaSeccion()">Cancelar</button>
+                <button class="btn btn-primary" onclick="crearNuevaSeccion()" data-i18n="createSection">Crear Sección</button>
+                <button class="btn btn-secondary" onclick="cerrarModalNuevaSeccion()" data-i18n="cancel">Cancelar</button>
             </div>
         </div>
     </div>
@@ -119,7 +128,7 @@
     <div id="previewModal" class="modal" style="z-index: 1000;">
         <div class="modal-content large-modal">
             <div class="modal-header">
-                <h3 class="modal-title">Previsualización del CV</h3>
+                <h3 class="modal-title" data-i18n="cvPreview">Previsualización del CV</h3>
                 <button class="close-modal" onclick="cerrarPreviewModal()">×</button>
             </div>
             
@@ -127,8 +136,8 @@
                 </div>
 
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="confirmarGenerarPDF()">Descargar PDF</button>
-                <button class="btn btn-secondary" onclick="cerrarPreviewModal()">Cerrar</button>
+                <button class="btn btn-primary" onclick="confirmarGenerarPDF()" data-i18n="downloadPdf">Descargar PDF</button>
+                <button class="btn btn-secondary" onclick="cerrarPreviewModal()" data-i18n="close">Cerrar</button>
             </div>
         </div>
     </div>

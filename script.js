@@ -7,40 +7,207 @@ let contadorIdiomas = 0;
 let contadorHabilidades = 0;
 let contadorSeccionesPersonalizadas = 0;
 let tecnologias = [];
+let currentLanguage = 'es';
 
-// --- Funciones de Adición y Eliminación de Items Predefinidos (SIN CAMBIOS) ---
+// --- Sistema de Internacionalización ---
+const translations = {
+    es: {
+        // Títulos y textos generales
+        "title": "Generador de CV",
+        "exportJson": "Exportar JSON",
+        "importJson": "Importar JSON",
+        "previewPdf": "Previsualizar y Generar PDF",
+        "clearAll": "Limpiar Todo",
+        "personalInfo": "Información Personal",
+        "professionalObjective": "Objetivo Profesional (Resumen)",
+        "workExperience": "Experiencia Laboral",
+        "education": "Formación Académica",
+        "coursesCertifications": "Cursos y Certificaciones",
+        "languages": "Idiomas",
+        "skills": "Habilidades",
+        "addNewSection": "+ Agregar Nueva Sección",
+        "createNewSection": "Crear Nueva Sección",
+        "sectionName": "Nombre de la Sección",
+        "sectionFields": "Campos de la Sección",
+        "createSection": "Crear Sección",
+        "cancel": "Cancelar",
+        "cvPreview": "Previsualización del CV",
+        "downloadPdf": "Descargar PDF",
+        "close": "Cerrar",
+        
+        // Placeholders y labels
+        "fullName": "Nombre Completo",
+        "phone": "Teléfono",
+        "email": "Email",
+        "linkedin": "LinkedIn (URL)",
+        "summary": "Extracto",
+        "addExperience": "+ Agregar Experiencia",
+        "addEducation": "+ Agregar Formación",
+        "addCourse": "+ Agregar Curso",
+        "addLanguage": "+ Agregar Idioma",
+        "addSkill": "+ Agregar Habilidad",
+        "addField": "+ Agregar Campo",
+        
+        // Placeholders específicos
+        "fullNamePlaceholder": "Tu nombre completo",
+        "phonePlaceholder": "Ej: +54 9 11 5555-5555",
+        "emailPlaceholder": "ejemplo@email.com",
+        "linkedinPlaceholder": "URL de tu perfil de LinkedIn",
+        "objectivePlaceholder": "Breve resumen de tu carrera y metas profesionales...",
+        "sectionNamePlaceholder": "Ej: Proyectos, Voluntariado, etc."
+    },
+    pt: {
+        // Títulos y textos generales
+        "title": "Gerador de CV",
+        "exportJson": "Exportar JSON",
+        "importJson": "Importar JSON",
+        "previewPdf": "Pré-visualizar e Gerar PDF",
+        "clearAll": "Limpar Tudo",
+        "personalInfo": "Informação Pessoal",
+        "professionalObjective": "Objetivo Profissional (Resumo)",
+        "workExperience": "Experiência Profissional",
+        "education": "Formação Acadêmica",
+        "coursesCertifications": "Cursos e Certificações",
+        "languages": "Idiomas",
+        "skills": "Habilidades",
+        "addNewSection": "+ Adicionar Nova Seção",
+        "createNewSection": "Criar Nova Seção",
+        "sectionName": "Nome da Seção",
+        "sectionFields": "Campos da Seção",
+        "createSection": "Criar Seção",
+        "cancel": "Cancelar",
+        "cvPreview": "Pré-visualização do CV",
+        "downloadPdf": "Baixar PDF",
+        "close": "Fechar",
+        
+        // Placeholders e labels
+        "fullName": "Nome Completo",
+        "phone": "Telefone",
+        "email": "Email",
+        "linkedin": "LinkedIn (URL)",
+        "summary": "Resumo",
+        "addExperience": "+ Adicionar Experiência",
+        "addEducation": "+ Adicionar Formação",
+        "addCourse": "+ Adicionar Curso",
+        "addLanguage": "+ Adicionar Idioma",
+        "addSkill": "+ Adicionar Habilidade",
+        "addField": "+ Adicionar Campo",
+        
+        // Placeholders específicos
+        "fullNamePlaceholder": "Seu nome completo",
+        "phonePlaceholder": "Ex: +55 11 99999-9999",
+        "emailPlaceholder": "exemplo@email.com",
+        "linkedinPlaceholder": "URL do seu perfil do LinkedIn",
+        "objectivePlaceholder": "Breve resumo da sua carreira e metas profissionais...",
+        "sectionNamePlaceholder": "Ex: Projetos, Voluntariado, etc."
+    },
+    en: {
+        // Títulos e textos gerais
+        "title": "CV Generator",
+        "exportJson": "Export JSON",
+        "importJson": "Import JSON",
+        "previewPdf": "Preview and Generate PDF",
+        "clearAll": "Clear All",
+        "personalInfo": "Personal Information",
+        "professionalObjective": "Professional Objective (Summary)",
+        "workExperience": "Work Experience",
+        "education": "Education",
+        "coursesCertifications": "Courses and Certifications",
+        "languages": "Languages",
+        "skills": "Skills",
+        "addNewSection": "+ Add New Section",
+        "createNewSection": "Create New Section",
+        "sectionName": "Section Name",
+        "sectionFields": "Section Fields",
+        "createSection": "Create Section",
+        "cancel": "Cancel",
+        "cvPreview": "CV Preview",
+        "downloadPdf": "Download PDF",
+        "close": "Close",
+        
+        // Placeholders e labels
+        "fullName": "Full Name",
+        "phone": "Phone",
+        "email": "Email",
+        "linkedin": "LinkedIn (URL)",
+        "summary": "Summary",
+        "addExperience": "+ Add Experience",
+        "addEducation": "+ Add Education",
+        "addCourse": "+ Add Course",
+        "addLanguage": "+ Add Language",
+        "addSkill": "+ Add Skill",
+        "addField": "+ Add Field",
+        
+        // Placeholders específicos
+        "fullNamePlaceholder": "Your full name",
+        "phonePlaceholder": "Ex: +1 555-123-4567",
+        "emailPlaceholder": "example@email.com",
+        "linkedinPlaceholder": "Your LinkedIn profile URL",
+        "objectivePlaceholder": "Brief summary of your career and professional goals...",
+        "sectionNamePlaceholder": "Ex: Projects, Volunteering, etc."
+    }
+};
+
+function cambiarIdioma() {
+    currentLanguage = document.getElementById('languageSelect').value;
+    aplicarIdioma();
+}
+
+function aplicarIdioma() {
+    const lang = translations[currentLanguage];
+    
+    // Actualizar textos con data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (lang[key]) {
+            element.textContent = lang[key];
+        }
+    });
+    
+    // Actualizar placeholders con data-i18n-placeholder
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (lang[key]) {
+            element.setAttribute('placeholder', lang[key]);
+        }
+    });
+}
+
+// --- Funciones de Adición y Eliminación de Items Predefinidos ---
 
 function agregarExperiencia() {
     const container = document.getElementById('experiencias-container');
     const id = contadorExperiencias++;
+    const lang = translations[currentLanguage];
+    
     const html = `
         <div class="dynamic-item" id="exp-${id}">
             <button class="btn btn-remove" onclick="eliminarElemento('exp-${id}')">✖</button>
             <div class="form-group">
-                <label>Empresa/Organización</label>
-                <input type="text" class="exp-empresa" placeholder="Nombre de la empresa">
+                <label>${lang['workExperience'] || 'Empresa/Organización'}</label>
+                <input type="text" class="exp-empresa" placeholder="${lang['workExperience'] || 'Nombre de la empresa'}">
             </div>
             <div class="form-group">
-                <label>Cargo</label>
-                <input type="text" class="exp-cargo" placeholder="Tu cargo o posición">
+                <label>${lang['professionalObjective'] ? 'Cargo' : 'Position'}</label>
+                <input type="text" class="exp-cargo" placeholder="${lang['professionalObjective'] ? 'Tu cargo o posición' : 'Your position'}">
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label>Fecha Inicio</label>
-                    <input type="text" class="exp-inicio" placeholder="Ej: Mayo 2022">
+                    <label>${currentLanguage === 'en' ? 'Start Date' : 'Fecha Inicio'}</label>
+                    <input type="text" class="exp-inicio" placeholder="${currentLanguage === 'en' ? 'Ex: May 2022' : 'Ej: Mayo 2022'}">
                 </div>
                 <div class="form-group">
-                    <label>Fecha Fin</label>
-                    <input type="text" class="exp-fin" placeholder="Ej: Presente">
+                    <label>${currentLanguage === 'en' ? 'End Date' : 'Fecha Fin'}</label>
+                    <input type="text" class="exp-fin" placeholder="${currentLanguage === 'en' ? 'Ex: Present' : 'Ej: Presente'}">
                 </div>
             </div>
             <div class="form-group">
-                <label>Ubicación</label>
-                <input type="text" class="exp-ubicacion" placeholder="Ciudad, Estado, País">
+                <label>${currentLanguage === 'en' ? 'Location' : 'Ubicación'}</label>
+                <input type="text" class="exp-ubicacion" placeholder="${currentLanguage === 'en' ? 'City, State, Country' : 'Ciudad, Estado, País'}">
             </div>
             <div class="form-group">
-                <label>Descripción</label>
-                <textarea class="exp-descripcion" placeholder="Describe tus responsabilidades. Usa guiones (-) o viñetas para las tareas principales, separadas por nueva línea."></textarea>
+                <label>${currentLanguage === 'en' ? 'Description' : 'Descripción'}</label>
+                <textarea class="exp-descripcion" placeholder="${currentLanguage === 'en' ? 'Describe your responsibilities. Use bullets (-) for main tasks, separated by new line.' : 'Describe tus responsabilidades. Usa guiones (-) o viñetas para las tareas principales, separadas por nueva línea.'}"></textarea>
             </div>
         </div>
     `;
@@ -50,30 +217,32 @@ function agregarExperiencia() {
 function agregarFormacion() {
     const container = document.getElementById('formacion-container');
     const id = contadorFormacion++;
+    const lang = translations[currentLanguage];
+    
     const html = `
         <div class="dynamic-item" id="form-${id}">
             <button class="btn btn-remove" onclick="eliminarElemento('form-${id}')">✖</button>
             <div class="form-group">
-                <label>Institución</label>
-                <input type="text" class="form-institucion" placeholder="Nombre de la institución">
+                <label>${currentLanguage === 'en' ? 'Institution' : 'Institución'}</label>
+                <input type="text" class="form-institucion" placeholder="${currentLanguage === 'en' ? 'Institution name' : 'Nombre de la institución'}">
             </div>
             <div class="form-group">
-                <label>Título/Grado</label>
-                <input type="text" class="form-titulo" placeholder="Ej: Técnico en Programación">
+                <label>${currentLanguage === 'en' ? 'Degree/Title' : 'Título/Grado'}</label>
+                <input type="text" class="form-titulo" placeholder="${currentLanguage === 'en' ? 'Ex: Software Engineering' : 'Ej: Técnico en Programación'}">
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label>Año Inicio</label>
+                    <label>${currentLanguage === 'en' ? 'Start Year' : 'Año Inicio'}</label>
                     <input type="text" class="form-inicio" placeholder="2020">
                 </div>
                 <div class="form-group">
-                    <label>Año Fin</label>
+                    <label>${currentLanguage === 'en' ? 'End Year' : 'Año Fin'}</label>
                     <input type="text" class="form-fin" placeholder="2024">
                 </div>
             </div>
             <div class="form-group">
-                <label>Ubicación</label>
-                <input type="text" class="form-ubicacion" placeholder="Ciudad, País">
+                <label>${currentLanguage === 'en' ? 'Location' : 'Ubicación'}</label>
+                <input type="text" class="form-ubicacion" placeholder="${currentLanguage === 'en' ? 'City, Country' : 'Ciudad, País'}">
             </div>
         </div>
     `;
@@ -83,20 +252,22 @@ function agregarFormacion() {
 function agregarCurso() {
     const container = document.getElementById('cursos-container');
     const id = contadorCursos++;
+    const lang = translations[currentLanguage];
+    
     const html = `
         <div class="dynamic-item" id="curso-${id}">
             <button class="btn btn-remove" onclick="eliminarElemento('curso-${id}')">✖</button>
             <div class="form-group">
-                <label>Nombre del Curso</label>
-                <input type="text" class="curso-nombre" placeholder="Ej: Java y Spring Boot">
+                <label>${currentLanguage === 'en' ? 'Course Name' : 'Nombre del Curso'}</label>
+                <input type="text" class="curso-nombre" placeholder="${currentLanguage === 'en' ? 'Ex: Java and Spring Boot' : 'Ej: Java y Spring Boot'}">
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label>Plataforma/Institución</label>
-                    <input type="text" class="curso-plataforma" placeholder="Ej: Oracle ONE, Alura">
+                    <label>${currentLanguage === 'en' ? 'Platform/Institution' : 'Plataforma/Institución'}</label>
+                    <input type="text" class="curso-plataforma" placeholder="${currentLanguage === 'en' ? 'Ex: Oracle ONE, Alura' : 'Ej: Oracle ONE, Alura'}">
                 </div>
                 <div class="form-group">
-                    <label>Año</label>
+                    <label>${currentLanguage === 'en' ? 'Year' : 'Año'}</label>
                     <input type="text" class="curso-anio" placeholder="2024">
                 </div>
             </div>
@@ -108,28 +279,32 @@ function agregarCurso() {
 function agregarIdioma() {
     const container = document.getElementById('idiomas-container');
     const id = contadorIdiomas++;
+    const lang = translations[currentLanguage];
+    
+    const nivelOptions = currentLanguage === 'en' ? 
+        '<option value="">Select Level</option><option value="Basic">Basic</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="Native">Native</option>' :
+        currentLanguage === 'pt' ?
+        '<option value="">Selecione Nível</option><option value="Básico">Básico</option><option value="Intermediário">Intermediário</option><option value="Avançado">Avançado</option><option value="Nativo">Nativo</option>' :
+        '<option value="">Seleccione Nivel</option><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option><option value="Nativo">Nativo</option>';
+    
     const html = `
         <div class="dynamic-item" id="idioma-${id}">
             <button class="btn btn-remove" onclick="eliminarElemento('idioma-${id}')">✖</button>
             <div class="form-group">
-                <label>Idioma</label>
-                <input type="text" class="idioma-nombre" placeholder="Ej: Español">
+                <label>${currentLanguage === 'en' ? 'Language' : 'Idioma'}</label>
+                <input type="text" class="idioma-nombre" placeholder="${currentLanguage === 'en' ? 'Ex: Spanish' : 'Ej: Español'}">
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label>Nivel General</label>
+                    <label>${currentLanguage === 'en' ? 'General Level' : 'Nivel General'}</label>
                     <select class="idioma-nivel-general">
-                        <option value="">Seleccione Nivel</option>
-                        <option value="Básico">Básico</option>
-                        <option value="Intermedio">Intermedio</option>
-                        <option value="Avanzado">Avanzado</option>
-                        <option value="Natividad">Nativo</option>
+                        ${nivelOptions}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Nivel Marco Común Europeo (MCER)</label>
+                    <label>${currentLanguage === 'en' ? 'CEFR Level' : 'Nivel Marco Común Europeo (MCER)'}</label>
                     <select class="idioma-nivel-mcer">
-                        <option value="">Seleccione MCER</option>
+                        <option value="">${currentLanguage === 'en' ? 'Select CEFR' : 'Seleccione MCER'}</option>
                         <option value="A1">A1</option>
                         <option value="A2">A2</option>
                         <option value="B1">B1</option>
@@ -147,12 +322,14 @@ function agregarIdioma() {
 function agregarHabilidad() {
     const container = document.getElementById('habilidades-container');
     const id = contadorHabilidades++;
+    const lang = translations[currentLanguage];
+    
     const html = `
         <div class="dynamic-item" id="hab-${id}">
             <button class="btn btn-remove" onclick="eliminarElemento('hab-${id}')">✖</button>
             <div class="form-group">
-                <label>Habilidad</label>
-                <input type="text" class="hab-nombre" placeholder="Ej: Trabajo en equipo">
+                <label>${currentLanguage === 'en' ? 'Skill' : 'Habilidad'}</label>
+                <input type="text" class="hab-nombre" placeholder="${currentLanguage === 'en' ? 'Ex: Teamwork' : 'Ej: Trabajo en equipo'}">
             </div>
         </div>
     `;
@@ -163,7 +340,7 @@ function eliminarElemento(id) {
     document.getElementById(id).remove();
 }
 
-// --- Lógica de Recolección y Carga de Datos (JSON) (SIN CAMBIOS) ---
+// --- Lógica de Recolección y Carga de Datos (JSON) ---
 
 function recolectarDatos() {
     const datos = {
@@ -230,7 +407,7 @@ function recolectarDatos() {
         });
     });
 
-    // Recolectar secciones personalizadas (SIN CAMBIOS)
+    // Recolectar secciones personalizadas
     document.querySelectorAll('.seccion-personalizada').forEach(seccion => {
         const nombreSeccion = seccion.dataset.nombre;
         const addButton = seccion.querySelector('.btn-add');
@@ -266,8 +443,7 @@ function recolectarDatos() {
     return datos;
 }
 
-
-// Función de Carga de Datos (con la corrección de fechas de la versión anterior)
+// Función de Carga de Datos
 function cargarDatos(datos) {
     limpiarFormulario();
 
@@ -358,7 +534,7 @@ function cargarDatos(datos) {
         cargarSeccionDinamica(datos.habilidades, 'habilidades-container', agregarHabilidad, 'hab');
     }
 
-    // Carga de secciones personalizadas (SIN CAMBIOS)
+    // Carga de secciones personalizadas
     if (datos.seccionesPersonalizadas && typeof datos.seccionesPersonalizadas === 'object') {
         document.querySelectorAll('.seccion-personalizada').forEach(seccion => seccion.remove());
         Object.entries(datos.seccionesPersonalizadas).forEach(([nombreSeccion, seccionData]) => {
@@ -372,7 +548,6 @@ function cargarDatos(datos) {
         });
     }
 }
-// Resto de funciones de carga y exportación (SIN CAMBIOS)
 
 function exportarJSON() {
     const datos = recolectarDatos();
@@ -388,7 +563,9 @@ function exportarJSON() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    alert('✅ Archivo JSON exportado exitosamente!');
+    alert(currentLanguage === 'en' ? '✅ JSON file exported successfully!' : 
+          currentLanguage === 'pt' ? '✅ Arquivo JSON exportado com sucesso!' : 
+          '✅ Archivo JSON exportado exitosamente!');
 }
 
 function importarJSON(event) {
@@ -401,9 +578,13 @@ function importarJSON(event) {
             const datos = JSON.parse(e.target.result);
             console.log('JSON importado correctamente:', datos);
             cargarDatos(datos);
-            alert('✅ Datos importados exitosamente!');
+            alert(currentLanguage === 'en' ? '✅ Data imported successfully!' : 
+                  currentLanguage === 'pt' ? '✅ Dados importados com sucesso!' : 
+                  '✅ Datos importados exitosamente!');
         } catch (error) {
-            alert('❌ Error al leer el archivo JSON. Asegúrate de que sea un archivo válido.');
+            alert(currentLanguage === 'en' ? '❌ Error reading JSON file. Make sure it is a valid file.' : 
+                  currentLanguage === 'pt' ? '❌ Erro ao ler o arquivo JSON. Certifique-se de que é um arquivo válido.' : 
+                  '❌ Error al leer el archivo JSON. Asegúrate de que sea un archivo válido.');
             console.error('Error al importar JSON:', error);
         }
     };
@@ -425,8 +606,8 @@ function crearSeccionPersonalizadaDesdeImportacion(nombreSeccion, campos, items)
             <div class="section-header">
                 <h2 class="section-title">${nombreSeccion}</h2>
                 <div>
-                    <button type="button" class="btn btn-add" onclick="agregarItemSeccionPersonalizada('${nombreSeccion}', ${camposString})">+ Agregar</button>
-                    <button type="button" class="btn btn-remove" onclick="eliminarSeccionPersonalizada('${seccionId}')">Eliminar Sección</button>
+                    <button type="button" class="btn btn-add" onclick="agregarItemSeccionPersonalizada('${nombreSeccion}', ${camposString})">+ ${currentLanguage === 'en' ? 'Add' : currentLanguage === 'pt' ? 'Adicionar' : 'Agregar'}</button>
+                    <button type="button" class="btn btn-remove" onclick="eliminarSeccionPersonalizada('${seccionId}')">${currentLanguage === 'en' ? 'Delete Section' : currentLanguage === 'pt' ? 'Excluir Seção' : 'Eliminar Sección'}</button>
                 </div>
             </div>
             <div id="${containerId}"></div>
@@ -529,14 +710,12 @@ function cerrarPreviewModal() {
     document.getElementById('cv-preview-area').innerHTML = '';
 }
 
-// 🐛 FUNCIÓN CORREGIDA PARA GENERAR PDF
+// FUNCIÓN CORREGIDA PARA GENERAR PDF
 function confirmarGenerarPDF() {
     const datos = recolectarDatos();
     const cvPreviewArea = document.getElementById('cv-preview-area');
 
-    // ✅ CORRECCIÓN CLAVE: Guardamos y removemos la clase 'cv-render-box' temporalmente.
-    // Esta clase tiene 'max-height' y 'overflow-y: auto' en styles.css, lo que oculta el contenido
-    // al motor html2canvas. Al removerla, el contenido se expande para ser completamente visible.
+    // CORRECCIÓN CLAVE: Guardamos y removemos la clase 'cv-render-box' temporalmente.
     const originalClasses = cvPreviewArea.className; 
     cvPreviewArea.classList.remove('cv-render-box');
 
@@ -554,20 +733,26 @@ function confirmarGenerarPDF() {
             .then(() => {
                 // Restauramos la clase después de la descarga exitosa
                 cvPreviewArea.className = originalClasses; 
-                alert('✅ PDF generado y descargado exitosamente!');
+                alert(currentLanguage === 'en' ? '✅ PDF generated and downloaded successfully!' : 
+                      currentLanguage === 'pt' ? '✅ PDF gerado e baixado com sucesso!' : 
+                      '✅ PDF generado y descargado exitosamente!');
                 cerrarPreviewModal();
             })
             .catch(error => {
                 // Restauramos la clase y cerramos el modal en caso de error
                 cvPreviewArea.className = originalClasses;
                 console.error('Error al generar el PDF:', error);
-                alert('❌ Ocurrió un error al generar el PDF.');
+                alert(currentLanguage === 'en' ? '❌ An error occurred while generating the PDF.' : 
+                      currentLanguage === 'pt' ? '❌ Ocorreu um erro ao gerar o PDF.' : 
+                      '❌ Ocurrió un error al generar el PDF.');
                 cerrarPreviewModal();
             });
     } else {
         // Restaurar si falla la librería
         cvPreviewArea.className = originalClasses;
-        alert('Error: La librería html2pdf.js no está cargada.');
+        alert(currentLanguage === 'en' ? 'Error: html2pdf.js library is not loaded.' : 
+              currentLanguage === 'pt' ? 'Erro: A biblioteca html2pdf.js não está carregada.' : 
+              'Error: La librería html2pdf.js no está cargada.');
         cerrarPreviewModal();
     }
 }
@@ -576,7 +761,6 @@ function generarPDF() {
     // Esta función solo abre el modal de previsualización para luego confirmar la descarga
     abrirPreviewCV();
 }
-
 
 /**
  * Función que genera la estructura HTML del CV con el ESTILO DE REFERENCIA.
@@ -589,7 +773,7 @@ function generarHTMLCV(datos) {
     const COLOR_SEGUNDARIO = '#000000'; 
     const LINE_COLOR = '#4a4a4a'; // Color para la línea divisoria
 
-    // Función auxiliar para formatear la descripción con viñetas (SIN CAMBIOS)
+    // Función auxiliar para formatear la descripción con viñetas
     function formatDescription(text) {
         if (!text) return '';
         const points = text.split('\n').filter(p => p.trim() !== '');
@@ -601,7 +785,7 @@ function generarHTMLCV(datos) {
         return `<p style="margin-top: 5px; font-size: 0.95em;">${text}</p>`;
     }
     
-    // Función auxiliar para generar el título de sección con la línea (SIN CAMBIOS)
+    // Función auxiliar para generar el título de sección con la línea
     function generarTituloSeccion(titulo) {
         return `
             <div style="margin-bottom: 10px;">
@@ -613,7 +797,7 @@ function generarHTMLCV(datos) {
         `;
     }
 
-    // --- Lógica para mostrar el Nivel de Idioma (SIN CAMBIOS) ---
+    // --- Lógica para mostrar el Nivel de Idioma ---
     function formatNivelIdioma(general, mcer) {
         let nivelTexto = general;
         if (general === 'Natividad') nivelTexto = 'Nativo'; // Corrección simple de texto
@@ -627,6 +811,36 @@ function generarHTMLCV(datos) {
         return `${nivelTexto}${mcerTexto}`; 
     }
 
+    // Traducciones para títulos de secciones en el CV
+    const sectionTitles = {
+        es: {
+            professionalProfile: 'Perfil Profesional',
+            workExperience: 'Experiencia Laboral',
+            education: 'Educación',
+            skills: 'Habilidades',
+            courses: 'Cursos y Certificaciones',
+            languages: 'Idiomas'
+        },
+        pt: {
+            professionalProfile: 'Perfil Profissional',
+            workExperience: 'Experiência Profissional',
+            education: 'Educação',
+            skills: 'Habilidades',
+            courses: 'Cursos e Certificações',
+            languages: 'Idiomas'
+        },
+        en: {
+            professionalProfile: 'Professional Profile',
+            workExperience: 'Work Experience',
+            education: 'Education',
+            skills: 'Skills',
+            courses: 'Courses and Certifications',
+            languages: 'Languages'
+        }
+    };
+    
+    const titles = sectionTitles[currentLanguage] || sectionTitles.es;
+
     // --- INICIO DEL TEMPLATE HTML DEL CV ---
     let html = `
         <div class="cv-document" style="font-family: 'Arial', sans-serif; font-size: 11pt; color: ${COLOR_TEXTO}; line-height: 1.4; padding: 40px;">
@@ -636,20 +850,20 @@ function generarHTMLCV(datos) {
                     ${datos.informacionPersonal.nombre || 'NOMBRE COMPLETO'}
                 </h1>
                 <p style="margin: 0; font-size: 1em; color: ${COLOR_TEXTO};">
-                    ${datos.informacionPersonal.telefono} | ${datos.informacionPersonal.email} | <a href="${datos.informacionPersonal.linkedin}" style="color: ${COLOR_SEGUNDARIO}; text-decoration: none;">LinkedIn</a>
+                    ${datos.informacionPersonal.telefono} | ${datos.informacionPersonal.email}${datos.informacionPersonal.linkedin ? ` | <a href="${datos.informacionPersonal.linkedin}" style="color: ${COLOR_SEGUNDARIO}; text-decoration: none;">LinkedIn</a>` : ''}
                 </p>
             </header>
 
             ${datos.objetivo ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Perfil Profesional')}
+                    ${generarTituloSeccion(titles.professionalProfile)}
                     <p style="font-size: 1em;">${datos.objetivo}</p>
                 </section>
             ` : ''}
             
             ${datos.experiencias.length > 0 ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Experiencia Laboral')}
+                    ${generarTituloSeccion(titles.workExperience)}
                     ${datos.experiencias.map(exp => `
                         <div style="margin-bottom: 20px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -671,7 +885,7 @@ function generarHTMLCV(datos) {
 
             ${datos.formacion.length > 0 ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Educación')}
+                    ${generarTituloSeccion(titles.education)}
                     ${datos.formacion.map(form => `
                         <div style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -692,7 +906,7 @@ function generarHTMLCV(datos) {
             
             ${datos.habilidades.length > 0 ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Habilidades')}
+                    ${generarTituloSeccion(titles.skills)}
                     <p style="font-size: 1em; line-height: 1.8;">
                         ${datos.habilidades.map(hab => `<strong>${hab.nombre}</strong>`).join(' | ')}
                     </p>
@@ -701,7 +915,7 @@ function generarHTMLCV(datos) {
 
             ${datos.cursos.length > 0 ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Cursos y Certificaciones')}
+                    ${generarTituloSeccion(titles.courses)}
                     <ul style="list-style-type: disc; padding-left: 20px; margin: 0;">
                         ${datos.cursos.map(curso => `
                             <li style="margin-bottom: 5px; font-size: 0.95em;">
@@ -714,7 +928,7 @@ function generarHTMLCV(datos) {
 
             ${datos.idiomas.length > 0 ? `
                 <section style="margin-bottom: 30px;">
-                    ${generarTituloSeccion('Idiomas')}
+                    ${generarTituloSeccion(titles.languages)}
                     <ul style="list-style-type: none; padding-left: 0; margin: 0;">
                         ${datos.idiomas.map(idioma => `
                             <li style="margin-bottom: 5px; font-size: 0.95em;">
@@ -749,10 +963,11 @@ function generarHTMLCV(datos) {
     return html;
 }
 
-// --- Inicialización, Modales y Secciones Personalizadas (SIN CAMBIOS) ---
+// --- Inicialización, Modales y Secciones Personalizadas ---
 
 document.addEventListener('DOMContentLoaded', function() {
-    limpiarFormulario(); 
+    limpiarFormulario();
+    aplicarIdioma(); // Aplicar idioma por defecto al cargar
 });
 
 function abrirModalNuevaSeccion() {
@@ -769,9 +984,11 @@ function cerrarModalNuevaSeccion() {
 function agregarCampo() {
     const container = document.getElementById('campos-container');
     const campoId = Date.now() + Math.random();
+    const lang = translations[currentLanguage];
+    
     const html = `
         <div class="field-item" id="campo-${campoId}">
-            <input type="text" placeholder="Nombre del campo" class="nombre-campo">
+            <input type="text" placeholder="${lang['sectionName'] || 'Nombre del campo'}" class="nombre-campo">
             <button type="button" class="btn-remove-field" onclick="eliminarCampo('campo-${campoId}')">✖</button>
         </div>
     `;
@@ -791,12 +1008,16 @@ function crearNuevaSeccion() {
 
 
     if (!nombreSeccion) {
-        alert('Por favor, ingresa un nombre para la sección');
+        alert(currentLanguage === 'en' ? 'Please enter a name for the section' : 
+              currentLanguage === 'pt' ? 'Por favor, insira um nome para a seção' : 
+              'Por favor, ingresa un nombre para la sección');
         return;
     }
 
     if (campos.length === 0) {
-        alert('Por favor, agrega al menos un campo para la sección');
+        alert(currentLanguage === 'en' ? 'Please add at least one field for the section' : 
+              currentLanguage === 'pt' ? 'Por favor, adicione pelo menos um campo para a seção' : 
+              'Por favor, agrega al menos un campo para la sección');
         return;
     }
 
@@ -812,8 +1033,8 @@ function crearNuevaSeccion() {
             <div class="section-header">
                 <h2 class="section-title">${nombreSeccion}</h2>
                 <div>
-                    <button type="button" class="btn btn-add" onclick="agregarItemSeccionPersonalizada('${nombreSeccion}', ${camposString})">+ Agregar</button>
-                    <button type="button" class="btn btn-remove" onclick="eliminarSeccionPersonalizada('seccion-personalizada-${id}')">Eliminar Sección</button>
+                    <button type="button" class="btn btn-add" onclick="agregarItemSeccionPersonalizada('${nombreSeccion}', ${camposString})">+ ${currentLanguage === 'en' ? 'Add' : currentLanguage === 'pt' ? 'Adicionar' : 'Agregar'}</button>
+                    <button type="button" class="btn btn-remove" onclick="eliminarSeccionPersonalizada('seccion-personalizada-${id}')">${currentLanguage === 'en' ? 'Delete Section' : currentLanguage === 'pt' ? 'Excluir Seção' : 'Eliminar Sección'}</button>
                 </div>
             </div>
             <div id="${containerId}"></div>
@@ -836,7 +1057,11 @@ function agregarItemSeccionPersonalizada(nombreSeccion, campos) {
 }
 
 function eliminarSeccionPersonalizada(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta sección?')) {
+    const message = currentLanguage === 'en' ? 'Are you sure you want to delete this section?' : 
+                   currentLanguage === 'pt' ? 'Tem certeza de que deseja excluir esta seção?' : 
+                   '¿Estás seguro de que quieres eliminar esta sección?';
+    
+    if (confirm(message)) {
         document.getElementById(id).remove();
     }
 }
