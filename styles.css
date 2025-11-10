@@ -335,13 +335,6 @@ textarea {
     z-index: 1000; /* Asegurar que esté encima de todo */
 }
 
-/* Estilos para el CV dentro del PDF, aunque muchos están en línea en JS, es bueno tener un contenedor base */
-.cv-document {
-    /* Estilos del CV que ya están en el JS, puedes copiarlos aquí si prefieres CSS */
-}
-
-/* --- MEDIA QUERIES PARA DISPOSITIVOS MÓVILES --- */
-
 @media (max-width: 768px) {
     body {
         padding: 10px;

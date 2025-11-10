@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de CV</title>
+    <title data-i18n="title">Generador de CV</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Selector de idioma -->
     <div class="language-selector">
         <select id="languageSelect" onchange="cambiarIdioma()">
             <option value="es">Español</option>
@@ -32,10 +31,17 @@
 
         <div class="cubicle">
             <h2 class="section-title" data-i18n="personalInfo">Información Personal</h2>
-            <div class="form-group">
-                <label data-i18n="fullName">Nombre Completo</label>
-                <input type="text" id="nombre" data-i18n-placeholder="fullNamePlaceholder">
+            <div class="row">
+                <div class="form-group" style="flex: 2;">
+                    <label data-i18n="fullName">Nombre Completo</label>
+                    <input type="text" id="nombre" data-i18n-placeholder="fullNamePlaceholder">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label data-i18n="location">Ubicación</label>
+                    <input type="text" id="ubicacion" data-i18n-placeholder="locationPlaceholder">
+                </div>
             </div>
+            
             <div class="row">
                 <div class="form-group">
                     <label data-i18n="phone">Teléfono</label>
@@ -50,7 +56,20 @@
                     <input type="text" id="linkedin" data-i18n-placeholder="linkedinPlaceholder">
                 </div>
             </div>
-        </div>
+            
+            <div class="row">
+                <div class="form-group" style="flex: 1;">
+                    <label data-i18n="photoLabel">Foto de Perfil</label>
+                    <input type="file" id="foto-perfil" accept="image/*" onchange="handleFileSelect(event)" style="display: none;">
+                    <label for="foto-perfil" class="btn btn-secondary" style="margin-right: 10px; width: auto; display: block; text-align: center;" data-i18n="photoButton">Subir Foto</label>
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <div id="foto-preview" style="height: 100px; border: 1px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <span style="color: #999;" data-i18n="photoPreviewText">Previsualización de la foto</span>
+                    </div>
+                </div>
+            </div>
+            </div>
 
         <div class="cubicle">
             <h2 class="section-title" data-i18n="professionalObjective">Objetivo Profesional (Resumen)</h2>
