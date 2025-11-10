@@ -1,0 +1,320 @@
+/* styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: white;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.actions .btn {
+    min-width: 150px;
+    justify-content: center;
+}
+
+.cubicle {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* MODIFICACIONES PARA ALINEAR TÍTULO Y BOTONES */
+.section-header {
+    /* Nueva regla: Habilita flexbox para alinear título y botones */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+/* Nueva regla: Asegura que los botones 'Agregar' y 'Eliminar Sección' estén uno al lado del otro */
+.section-header > div {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    flex-shrink: 0;
+}
+/* FIN DE MODIFICACIONES DE ALINEACIÓN */
+
+.section-title {
+    color: #4a4a4a;
+    border-bottom: none; 
+    padding-bottom: 0;
+    margin-bottom: 0; 
+    font-size: 1.5em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #667eea;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.row .form-group {
+    flex: 1;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.btn-primary {
+    background-color: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #556cdc;
+}
+
+.btn-secondary {
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #dae0e5;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-add {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-add:hover {
+    background-color: #1e7e34;
+}
+
+.btn-remove {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 5px 8px;
+    font-size: 0.8em;
+    align-self: flex-start; /* Permite que el botón se ajuste solo */
+}
+
+.btn-remove:hover {
+    background-color: #ec971f;
+}
+
+/* Estilos para elementos dinámicos */
+.dynamic-item {
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    position: relative;
+    padding-top: 35px; /* Espacio para el botón de remover */
+}
+
+.dynamic-item .btn-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 10;
+}
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    color: #333;
+    font-size: 1.4em;
+    margin: 0;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.field-item {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.field-item:hover {
+    border-color: #667eea;
+}
+
+.btn-remove-field {
+    background: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-remove-field:hover {
+    background: #c82333;
+}
+
+/* --- Estilos para la Previsualización del CV --- */
+/* Estilos para que el modal de preview sea más grande */
+.large-modal {
+    max-width: 900px !important;
+    width: 95%;
+}
+
+/* Contenedor donde se renderiza el CV dentro del modal */
+.cv-render-box {
+    background: white;
+    padding: 30px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Establecer la altura y desplazamiento para que el CV sea legible */
+    max-height: 70vh; /* 70% del viewport height */
+    overflow-y: auto;
+}
+
+/* Sobrescribir el estilo del modal base para el preview */
+#previewModal {
+    z-index: 1000; /* Asegurar que esté encima de todo */
+}
+
+/* Estilos para el CV dentro del PDF, aunque muchos están en línea en JS, es bueno tener un contenedor base */
+.cv-document {
+    /* Estilos del CV que ya están en el JS, puedes copiarlos aquí si prefieres CSS */
+}
