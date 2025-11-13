@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="title">Generador de CV</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="language-selector">
@@ -28,98 +29,145 @@
                 <button class="btn btn-danger" onclick="limpiarFormulario()" data-i18n="clearAll">Limpiar Todo</button>
             </div>
         </header>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="personalInfo">Información Personal</h2>
-            <div class="row">
-                <div class="form-group" style="flex: 2;">
-                    <label data-i18n="fullName">Nombre Completo</label>
-                    <input type="text" id="nombre" data-i18n-placeholder="fullNamePlaceholder">
+        
+        <div id="sections-container">
+            <div class="cubicle movable-section" id="personal-info-cubicle">
+                <div class="section-header">
+                    <h2 class="section-title" data-i18n="personalInfo">Información Personal</h2>
+                    <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('personal-info-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('personal-info-cubicle', 'down')">▼</button>
+                    </div>
                 </div>
-                <div class="form-group" style="flex: 1;">
-                    <label data-i18n="location">Ubicación</label>
-                    <input type="text" id="ubicacion" data-i18n-placeholder="locationPlaceholder">
+                <div class="row">
+                    <div class="form-group" style="flex: 2;">
+                        <label data-i18n="fullName">Nombre Completo</label>
+                        <input type="text" id="nombre" data-i18n-placeholder="fullNamePlaceholder">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label data-i18n="location">Ubicación</label>
+                        <input type="text" id="ubicacion" data-i18n-placeholder="locationPlaceholder">
+                    </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="form-group">
-                    <label data-i18n="phone">Teléfono</label>
-                    <input type="tel" id="telefono" data-i18n-placeholder="phonePlaceholder">
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label data-i18n="phone">Teléfono</label>
+                        <input type="tel" id="telefono" data-i18n-placeholder="phonePlaceholder">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="email">Email</label>
+                        <input type="email" id="email" data-i18n-placeholder="emailPlaceholder">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="linkedin">LinkedIn (URL)</label>
+                        <input type="text" id="linkedin" data-i18n-placeholder="linkedinPlaceholder">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label data-i18n="email">Email</label>
-                    <input type="email" id="email" data-i18n-placeholder="emailPlaceholder">
-                </div>
-                <div class="form-group">
-                    <label data-i18n="linkedin">LinkedIn (URL)</label>
-                    <input type="text" id="linkedin" data-i18n-placeholder="linkedinPlaceholder">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="form-group" style="flex: 1;">
-                    <label data-i18n="photoLabel">Foto de Perfil</label>
-                    <input type="file" id="foto-perfil" accept="image/*" onchange="handleFileSelect(event)" style="display: none;">
-                    <label for="foto-perfil" class="btn btn-secondary" style="margin-right: 10px; width: auto; display: block; text-align: center;" data-i18n="photoButton">Subir Foto</label>
-                </div>
-                <div class="form-group" style="flex: 2;">
-                    <div id="foto-preview" style="height: 100px; border: 1px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                        <span style="color: #999;" data-i18n="photoPreviewText">Previsualización de la foto</span>
+                
+                <div class="row" style="align-items: center;">
+                    <div class="form-group" style="flex: 1;">
+                        <label data-i18n="photoLabel">Foto de Perfil</label>
+                        <input type="file" id="foto-perfil" accept="image/*" onchange="handleFotoUpload(event)">
+                    </div>
+                    <div class="form-group" style="flex: 1; text-align: center;">
+                        <div id="foto-preview" style="width: 150px; height: 150px; border: 1px solid #ccc; margin: 0 auto; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%;">
+                            <span style="color: #999;" data-i18n="photoPreviewText">Previsualización de la foto</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="cubicle movable-section" id="objetivo-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="professionalObjective">Objetivo Profesional (Resumen)</h2>
+                     <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('objetivo-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('objetivo-cubicle', 'down')">▼</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="objetivo" rows="5" data-i18n-placeholder="objectivePlaceholder"></textarea>
+                </div>
+            </div>
+            
+            <div class="cubicle dynamic-section movable-section" id="experiencias-main-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="workExperience">Experiencia Laboral</h2>
+                     <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('experiencias-main-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('experiencias-main-cubicle', 'down')">▼</button>
+                        <button class="btn btn-edit-fields" onclick="abrirModalConfiguracionCampos('experiencias')">⚙️</button>
+                    </div>
+                </div>
+                <div id="experiencias-container">
+                    </div>
+                <button class="btn btn-add" onclick="agregarExperiencia()" data-i18n="addExperience">+ Agregar Experiencia</button>
+            </div>
+            
+            <div class="cubicle dynamic-section movable-section" id="formacion-main-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="education">Formación Académica</h2>
+                    <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('formacion-main-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('formacion-main-cubicle', 'down')">▼</button>
+                        <button class="btn btn-edit-fields" onclick="abrirModalConfiguracionCampos('formacion')">⚙️</button>
+                    </div>
+                </div>
+                <div id="formacion-container">
+                    </div>
+                <button class="btn btn-add" onclick="agregarFormacion()" data-i18n="addEducation">+ Agregar Formación</button>
             </div>
 
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="professionalObjective">Objetivo Profesional (Resumen)</h2>
-            <div class="form-group">
-                <label data-i18n="summary">Extracto</label>
-                <textarea id="objetivo" rows="4" data-i18n-placeholder="objectivePlaceholder"></textarea>
+            <div class="cubicle dynamic-section movable-section" id="cursos-main-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="coursesCertifications">Cursos y Certificaciones</h2>
+                    <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('cursos-main-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('cursos-main-cubicle', 'down')">▼</button>
+                        <button class="btn btn-edit-fields" onclick="abrirModalConfiguracionCampos('cursos')">⚙️</button>
+                    </div>
+                </div>
+                <div id="cursos-container">
+                    </div>
+                <button class="btn btn-add" onclick="agregarCurso()" data-i18n="addCourse">+ Agregar Curso</button>
             </div>
-        </div>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="workExperience">Experiencia Laboral</h2>
-            <div id="experiencias-container">
+            
+            <div class="cubicle dynamic-section movable-section" id="idiomas-main-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="languages">Idiomas</h2>
+                    <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('idiomas-main-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('idiomas-main-cubicle', 'down')">▼</button>
+                        <button class="btn btn-edit-fields" onclick="abrirModalConfiguracionCampos('idiomas')">⚙️</button>
+                    </div>
                 </div>
-            <button class="btn btn-add" onclick="agregarExperiencia()" data-i18n="addExperience">+ Agregar Experiencia</button>
-        </div>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="education">Formación Académica</h2>
-            <div id="formacion-container">
+                <div id="idiomas-container">
+                    </div>
+                <button class="btn btn-add" onclick="agregarIdioma()" data-i18n="addLanguage">+ Agregar Idioma</button>
+            </div>
+            
+            <div class="cubicle dynamic-section movable-section" id="habilidades-main-cubicle">
+                 <div class="section-header">
+                    <h2 class="section-title" data-i18n="skills">Habilidades</h2>
+                    <div class="section-controls-move">
+                        <button class="btn btn-move" onclick="moverSeccion('habilidades-main-cubicle', 'up')">▲</button>
+                        <button class="btn btn-move" onclick="moverSeccion('habilidades-main-cubicle', 'down')">▼</button>
+                        <button class="btn btn-edit-fields" onclick="abrirModalConfiguracionCampos('habilidades')">⚙️</button>
+                    </div>
                 </div>
-            <button class="btn btn-add" onclick="agregarFormacion()" data-i18n="addEducation">+ Agregar Formación</button>
+                <div id="habilidades-container">
+                    </div>
+                <button class="btn btn-add" onclick="agregarHabilidad()" data-i18n="addSkill">+ Agregar Habilidad</button>
+            </div>
+            
+            </div> <div class="cubicle btn-add-section-cubicle" id="add-section-cubicle">
+            <button class="btn btn-secondary btn-add-section" onclick="abrirModalNuevaSeccion()" data-i18n="addNewSection">
+                + Agregar Nueva Sección
+            </button>
         </div>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="coursesCertifications">Cursos y Certificaciones</h2>
-            <div id="cursos-container">
-                </div>
-            <button class="btn btn-add" onclick="agregarCurso()" data-i18n="addCourse">+ Agregar Curso</button>
-        </div>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="languages">Idiomas</h2>
-            <div id="idiomas-container">
-                </div>
-            <button class="btn btn-add" onclick="agregarIdioma()" data-i18n="addLanguage">+ Agregar Idioma</button>
-        </div>
-
-        <div class="cubicle">
-            <h2 class="section-title" data-i18n="skills">Habilidades</h2>
-            <div id="habilidades-container">
-                </div>
-            <button class="btn btn-add" onclick="agregarHabilidad()" data-i18n="addSkill">+ Agregar Habilidad</button>
-        </div>
-
-        <button class="btn btn-add-section" onclick="abrirModalNuevaSeccion()" data-i18n="addNewSection">
-            + Agregar Nueva Sección
-        </button>
-    </div>
-
-    <div id="modalNuevaSeccion" class="modal">
+            
+    </div> <div id="newSectionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="createNewSection">Crear Nueva Sección</h3>
@@ -127,16 +175,21 @@
             </div>
             <div class="form-group">
                 <label data-i18n="sectionName">Nombre de la Sección</label>
-                <input type="text" id="nombreSeccion" data-i18n-placeholder="sectionNamePlaceholder">
+                <input type="text" id="nombre-nueva-seccion" data-i18n-placeholder="sectionNamePlaceholder">
             </div>
-            <div class="form-group">
-                <label data-i18n="sectionFields">Campos de la Sección</label>
-                <div id="campos-container">
-                    </div>
-                <button type="button" class="btn btn-add" onclick="agregarCampo()" style="margin-top: 10px;" data-i18n="addField">
-                    + Agregar Campo
-                </button>
+            
+            <h4 data-i18n="sectionFields">Campos de la Sección</h4>
+            <div id="campos-container">
+                <div class="row campo-item">
+                    <input type="text" placeholder="Nombre del Campo (Ej: Título)" class="nombre-campo" style="flex: 2;">
+                    <button class="btn btn-danger" onclick="this.parentNode.remove()">✖</button>
+                </div>
             </div>
+
+            <button type="button" class="btn btn-add" onclick="agregarCampo()" style="margin-top: 10px;" data-i18n="addField">
+                + Agregar Campo
+            </button>
+            
             <div class="modal-actions">
                 <button class="btn btn-primary" onclick="crearNuevaSeccion()" data-i18n="createSection">Crear Sección</button>
                 <button class="btn btn-secondary" onclick="cerrarModalNuevaSeccion()" data-i18n="cancel">Cancelar</button>
@@ -144,6 +197,20 @@
         </div>
     </div>
     
+    <div id="fieldConfigModal" class="modal" style="z-index: 1000;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="configureFields">Configurar Campos</h3>
+                <button class="close-modal" onclick="cerrarModalConfiguracionCampos()">×</button>
+            </div>
+            <div id="config-fields-area">
+                </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="guardarConfiguracionCampos()" data-i18n="save">Guardar</button>
+                <button class="btn btn-secondary" onclick="cerrarModalConfiguracionCampos()" data-i18n="cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
     <div id="previewModal" class="modal" style="z-index: 1000;">
         <div class="modal-content large-modal">
             <div class="modal-header">
@@ -161,7 +228,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
