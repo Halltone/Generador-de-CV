@@ -13,29 +13,10 @@ body {
     padding: 20px;
 }
 
-/* Selector de idioma */
-.language-selector {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.language-selector select {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    background: white;
-    color: #333;
-    font-size: 0.9em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    cursor: pointer;
-}
-
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 30px 20px;
+    padding: 30px;
 }
 
 header {
@@ -73,22 +54,20 @@ h1 {
 
 /* MODIFICACIONES PARA ALINEAR TÍTULO Y BOTONES */
 .section-header {
+    /* Nueva regla: Habilita flexbox para alinear título y botones */
     display: flex;
     justify-content: space-between; 
     align-items: center;
     margin-bottom: 15px;
     border-bottom: 2px solid #e9ecef;
     padding-bottom: 10px;
-    flex-wrap: wrap;
-    gap: 10px;
 }
 
-/* Contenedor para botones de movimiento y configuración */
+/* Nueva regla: Asegura que los botones 'Agregar' y 'Eliminar Sección' estén uno al lado del otro */
 .section-header > div {
     display: flex;
     gap: 10px; /* Espacio entre los botones */
     flex-shrink: 0;
-    align-items: center;
 }
 /* FIN DE MODIFICACIONES DE ALINEACIÓN */
 
@@ -228,7 +207,7 @@ textarea {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -237,7 +216,6 @@ textarea {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
     justify-content: center;
     align-items: center;
-    display: none; /* Cambiado de 'none' a 'flex' por JS */
 }
 
 .modal-content {
@@ -284,15 +262,19 @@ textarea {
     margin-top: 20px;
 }
 
-.campo-item {
+.field-item {
     background: #f8f9fa;
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 10px;
     border-radius: 8px;
-    border: 1px solid #e9ecef;
+    border: 2px solid #e9ecef;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.field-item:hover {
+    border-color: #667eea;
 }
 
 .btn-remove-field {
@@ -305,191 +287,34 @@ textarea {
     cursor: pointer;
 }
 
+.btn-remove-field:hover {
+    background: #c82333;
+}
+
 /* --- Estilos para la Previsualización del CV --- */
+/* Estilos para que el modal de preview sea más grande */
 .large-modal {
     max-width: 900px !important;
     width: 95%;
 }
 
+/* Contenedor donde se renderiza el CV dentro del modal */
 .cv-render-box {
     background: white;
     padding: 30px;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: 70vh;
+    /* Establecer la altura y desplazamiento para que el CV sea legible */
+    max-height: 70vh; /* 70% del viewport height */
     overflow-y: auto;
 }
 
+/* Sobrescribir el estilo del modal base para el preview */
 #previewModal {
-    z-index: 1000;
+    z-index: 1000; /* Asegurar que esté encima de todo */
 }
 
-/* --- (NUEVO) Estilo Botón Configuración --- */
-.btn-edit-fields {
-    background-color: #f39c12; /* Naranja */
-    color: white;
-    padding: 6px 10px;
-    font-size: 1em;
-    border-radius: 6px; /* Borde normal para este botón */
-}
-.btn-edit-fields:hover {
-    background-color: #e67e22;
-}
-
-/* --- (NUEVO) Estilo Modal Configuración --- */
-#fieldConfigModal .modal-content {
-    max-width: 500px;
-}
-.field-config-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-}
-.field-config-item label {
-    font-weight: bold;
-    color: #333;
-    font-size: 0.9em;
-}
-.field-config-item input[type="text"] {
-    flex-basis: 50%;
-    padding: 6px;
-}
-.field-config-item .label-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: normal;
-}
-.field-config-item input[type="checkbox"] {
-    width: auto;
-    transform: scale(1.2);
-}
-
-/* --- (NUEVO) Estilo Botones Mover (Píldora) --- */
-.section-controls-move {
-    display: flex;
-    border-radius: 20px; /* Borde ovalado/pill */
-    overflow: hidden; /* Para cortar las esquinas de los botones */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 1px solid #dfe1e5; /* Borde sutil tipo Google */
-}
-
-.btn-move {
-    background-color: #f8f9fa; /* Fondo claro */
-    color: #5f6368; /* Color de ícono Google */
-    border: none;
-    padding: 6px 12px;
-    font-size: 1em; /* Ajustar si es necesario */
-    border-radius: 0; /* Sin radio individual */
-    cursor: pointer;
-    transition: background-color 0.2s;
-    line-height: 1.5; /* Centrado vertical del ícono */
-}
-
-.btn-move:hover {
-    background-color: #f1f3f4; /* Hover sutil */
-}
-
-/* Divisor entre los botones */
-.btn-move:first-of-type {
-    border-right: 1px solid #dfe1e5;
-    padding-left: 14px; /* Un poco más de espacio en el borde izquierdo */
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-}
-.btn-move:last-of-type {
-    padding-right: 14px; /* Un poco más de espacio en el borde derecho */
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-/* --- FIN NUEVOS ESTILOS --- */
-
-
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    .container {
-        padding: 15px 10px;
-    }
-    
-    h1 {
-        font-size: 2em;
-        margin-bottom: 20px;
-    }
-    
-    .actions {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .actions .btn {
-        min-width: 200px;
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .cubicle {
-        padding: 15px;
-    }
-    
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .section-header > div {
-        width: 100%;
-        justify-content: flex-end; /* Alinea los botones a la derecha en móvil */
-    }
-    
-    .row {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .modal-content {
-        width: 95%;
-        padding: 20px;
-        margin: 20px;
-    }
-    
-    .modal-actions {
-        flex-direction: column;
-    }
-    
-    .language-selector {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
-    .language-selector select {
-        width: 100%;
-        max-width: 200px;
-    }
-    
-    .dynamic-item {
-        padding: 10px;
-        padding-top: 30px;
-    }
-    
-    .btn {
-        padding: 8px 12px;
-        font-size: 0.85em;
-    }
-    
-    .cv-render-box {
-        padding: 15px;
-    }
+/* Estilos para el CV dentro del PDF, aunque muchos están en línea en JS, es bueno tener un contenedor base */
+.cv-document {
+    /* Estilos del CV que ya están en el JS, puedes copiarlos aquí si prefieres CSS */
 }
