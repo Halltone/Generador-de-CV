@@ -1,4 +1,4 @@
-// script.js - VERSIÓN FINAL (DISEÑO CENTRADO Y LINEAL)
+// script.js - VERSIÓN FINAL (FOTO A LA IZQUIERDA)
 
 let contadores = {
     experiencias: 0,
@@ -297,7 +297,7 @@ function exportarJSON() {
     a.click();
 }
 
-// --- GENERAR HTML Y PDF (DISEÑO CENTRADO Y LINEAL) ---
+// --- GENERAR HTML Y PDF (DISEÑO FOTO IZQUIERDA) ---
 
 function generarHTMLCV() {
     const d = {
@@ -309,7 +309,6 @@ function generarHTMLCV() {
         linkedin: getValue('linkedin')
     };
 
-    // ESTILOS MODIFICADOS PARA DISEÑO CENTRADO Y LINEAL
     const css = `
         <style>
             .cv-body { 
@@ -322,24 +321,30 @@ function generarHTMLCV() {
                 height: 100%; 
                 box-sizing: border-box; 
             }
-            /* HEADER CENTRADO */
+            
+            /* HEADER: FLEX ROW (Foto Izquierda - Texto Derecha) */
             .cv-header { 
                 display: flex; 
-                flex-direction: column; 
-                align-items: center; 
-                text-align: center;
+                align-items: center; /* Alineación vertical centrada */
                 border-bottom: 2px solid #2c3e50; 
                 padding-bottom: 25px; 
                 margin-bottom: 25px; 
             }
+            
             .cv-photo { 
-                width: 130px; 
-                height: 130px; 
+                width: 120px; 
+                height: 120px; 
                 border-radius: 50%; 
                 object-fit: cover; 
                 border: 3px solid #eee; 
-                margin-bottom: 15px; /* Separación de la foto al nombre */
+                margin-right: 30px; /* Separación a la derecha de la foto */
+                flex-shrink: 0; /* Evita que la foto se aplaste */
             }
+            
+            .cv-header-text {
+                flex-grow: 1;
+            }
+
             .cv-name { 
                 margin: 0; 
                 font-size: 28px; 
@@ -348,6 +353,7 @@ function generarHTMLCV() {
                 font-weight: 800; 
                 letter-spacing: 1px;
             }
+            
             .cv-info { 
                 font-size: 14px; 
                 color: #555; 
@@ -364,7 +370,6 @@ function generarHTMLCV() {
                 padding: 8px 15px; 
                 border-left: 5px solid #2c3e50; 
                 margin: 25px 0 15px 0; 
-                /* Asegura que el título ocupe todo el ancho y limpie flotados anteriores */
                 width: 100%;
                 box-sizing: border-box;
             }
@@ -384,16 +389,18 @@ function generarHTMLCV() {
 
     let html = `<div class="cv-body">${css}`;
 
-    // HEADER (Estructura modificada para columna)
+    // HEADER (FLEXBOX: Foto Izq)
     html += `<div class="cv-header">`;
     if(fotoBase64) html += `<img src="${fotoBase64}" class="cv-photo">`;
-    html += `
-        <h1 class="cv-name">${d.nombre || 'Nombre Apellido'}</h1>
-        <div class="cv-info">
-            ${d.email} ${d.telefono ? ` | ${d.telefono}` : ''} <br>
-            ${d.ubicacion} ${d.linkedin ? ` | ${d.linkedin}` : ''}
-        </div>
-    </div>`;
+    
+    html += `<div class="cv-header-text">
+                <h1 class="cv-name">${d.nombre || 'Nombre Apellido'}</h1>
+                <div class="cv-info">
+                    ${d.email} ${d.telefono ? ` | ${d.telefono}` : ''} <br>
+                    ${d.ubicacion} ${d.linkedin ? ` | ${d.linkedin}` : ''}
+                </div>
+             </div>
+             </div>`;
 
     if(d.perfil) html += `<div class="cv-sec-title">Perfil Profesional</div><div class="cv-desc">${d.perfil}</div>`;
 
@@ -455,7 +462,7 @@ function generarHTMLCV() {
     });
     if(hasCur) html += curHTML;
 
-    // Idiomas (LINEAR - Uno debajo de otro)
+    // Idiomas (LINEAR)
     const langs = [];
     document.querySelectorAll('#idiomas-container .dynamic-item').forEach(el => {
         const n = el.querySelector('.lang-nombre').value;
@@ -475,7 +482,7 @@ function generarHTMLCV() {
         html += `</ul>`;
     }
     
-    // Habilidades (LINEAR - Uno debajo de otro, o tags, pero ocupando el ancho completo)
+    // Habilidades
     const skills = [];
     document.querySelectorAll('#habilidades-container .skill-tag').forEach(el => {
         const s = el.querySelector('.skill-nombre').value;
